@@ -1,4 +1,4 @@
-(() => {
+window.MakeFlareImage = function ()  {
   const DATA_URL =
     "https://raw.githubusercontent.com/Maruhati3/3ice_addnotes/refs/heads/main/data.json";
 
@@ -71,4 +71,4 @@
     .catch(err => {
       console.error("data.json の取得に失敗しました", err);
     });
-})();
+};

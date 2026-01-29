@@ -1,4 +1,4 @@
-window.MakeFlareImage = function ()  {
+window.MakeFlareImage = function () {
   const DATA_URL =
     "https://raw.githubusercontent.com/Maruhati3/3ice_addnotes/refs/heads/main/data.json";
 
@@ -10,18 +10,28 @@ window.MakeFlareImage = function ()  {
     4: "CSP"
   };
 
+  // ★ 追加：タイトル正規化関数
+  const normalizeTitle = (str) =>
+    str
+      .trim()
+      .replace(/&quot;/g, '"')
+      .replace(/[“”]/g, '"')
+      .replace(/[‘’]/g, "'");
+
   fetch(DATA_URL)
     .then(res => res.json())
     .then(data => {
+      // ★ Map 作成時に正規化
       const dataMap = new Map(
-        data.map(row => [row.title, row])
+        data.map(row => [normalizeTitle(row.title), row])
       );
 
       document.querySelectorAll(".div-jacket").forEach(Block => {
         const img = Block.querySelector("img");
         if (!img) return;
 
-        const title = img.title?.trim();
+        // ★ 取得した title も正規化
+        const title = img.title ? normalizeTitle(img.title) : "";
         if (!title) return;
 
         const diffMatch = img.className.match(/diff-(\d)/);
@@ -38,11 +48,10 @@ window.MakeFlareImage = function ()  {
 
         if (Block.querySelector(".jacket-text")) return;
 
-        // === ここがポイント ===
         const w = Block.clientWidth;
         const fontSize = Math.min(
-          22,               // 最大
-          Math.max(12, w * 0.18) // 最小 & 比率
+          22,
+          Math.max(12, w * 0.18)
         );
 
         Block.style.position = "relative";
